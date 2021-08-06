@@ -73,11 +73,12 @@ internal unsafe struct i2c_rdwr_ioctl_data
 [StructLayout(LayoutKind.Sequential)]
 internal unsafe struct i2c_smbus_ioctl_data
 {
+    public const byte I2C_SMBUS_WRITE = 0;
     public const byte I2C_SMBUS_READ = 1;
 
     public byte read_write;
     public byte command;
-    public uint size;
+    public SMBusDataSize size;
 
     [MarshalAs(UnmanagedType.ByValArray)]
     public i2c_smbus_data data;
@@ -86,9 +87,6 @@ internal unsafe struct i2c_smbus_ioctl_data
 [StructLayout(LayoutKind.Explicit)]
 internal unsafe struct i2c_smbus_data
 {
-    public const int I2C_SMBUS_BLOCK_MAX = 32;
-    public const int I2C_SMBUS_I2C_BLOCK_DATA = 8;
-
     [FieldOffset(0)]
     public byte @byte;
     [FieldOffset(0)]
@@ -96,8 +94,22 @@ internal unsafe struct i2c_smbus_data
     [FieldOffset(0)]
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = I2C_SMBUS_BLOCK_MAX + 2)]
     public byte[] block;
+
+    internal const byte I2C_SMBUS_BLOCK_MAX = 32;
 }
 
+internal enum SMBusDataSize : uint
+{
+    // Size identifiers uapi/linux/i2c.h
+    I2C_SMBUS_QUICK = 0,
+    I2C_SMBUS_BYTE = 1,
+    I2C_SMBUS_BYTE_DATA = 2,
+    I2C_SMBUS_WORD_DATA = 3,
+    I2C_SMBUS_PROC_CALL = 4,
+    I2C_SMBUS_BLOCK_DATA = 5,  // This isn't supported by Pure-I2C drivers with SMBUS emulation, like those in RaspberryPi, OrangePi, etc :(
+    I2C_SMBUS_BLOCK_PROC_CALL = 7,  // Like I2C_SMBUS_BLOCK_DATA, it isn't supported by Pure-I2C drivers either.
+    I2C_SMBUS_I2C_BLOCK_DATA = 8,
+}
 
 [Flags]
 internal enum UnixSpiMode : byte
