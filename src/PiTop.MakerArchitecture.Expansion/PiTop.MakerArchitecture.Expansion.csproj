@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Iot.Device.Bindings" Version="1.5.0" />
+    <!-- <PackageReference Include="Iot.Device.Bindings" Version="1.5.0" /> -->
     <PackageReference Include="PocketLogger" Version="0.4.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PiTop.MakerArchitecture.Foundation\PiTop.MakerArchitecture.Foundation.csproj" />
+    <ProjectReference Include="..\..\lib\dotnet-iot\src\Iot.Device.Bindings\Iot.Device.Bindings.csproj" />
   </ItemGroup>
 
   <ItemGroup>

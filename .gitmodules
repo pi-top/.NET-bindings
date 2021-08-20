@@ -1,0 +1,4 @@
+[submodule "lib/dotnet-iot"]
+	path = lib/dotnet-iot
+	url = https://github.com/paulmey/iot.git
+	branch = pi-top
