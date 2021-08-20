@@ -1,9 +1,10 @@
-﻿using PiTop.Abstractions;
+﻿using System;
+using System.Device.I2c;
+using System.Reactive.Disposables;
+using PiTop.Abstractions;
 using PiTop.MakerArchitecture.Foundation;
 using PiTop.MakerArchitecture.Foundation.Sensors;
 using Pocket;
-using System;
-using System.Reactive.Disposables;
 using UnitsNet;
 
 namespace PiTop.MakerArchitecture.Expansion.Sensors
@@ -11,7 +12,7 @@ namespace PiTop.MakerArchitecture.Expansion.Sensors
 
     public class UltrasonicSensorSMBus : UltrasonicSensor
     {
-        private SMBusDevice? _bus;
+        private I2cDevice? _bus;
         private byte _configRegister;
         private byte _dataRegister;
 
@@ -72,7 +73,7 @@ namespace PiTop.MakerArchitecture.Expansion.Sensors
 
             Logger.Log.Info($"Using Data Register 0x{_dataRegister:X2} and Config Register 0x{_configRegister:X2}");
 
-            _bus = new SMBusDevice(Port.I2CDevice);
+            _bus = Port.I2CDevice;
             _bus.WriteByte(_configRegister, data);
             var test = _bus.ReadByte(_configRegister);
             Logger.Log.Info($"Configured writing  0x{test:X2}");
