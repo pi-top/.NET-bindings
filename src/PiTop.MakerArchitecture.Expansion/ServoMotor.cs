@@ -1,5 +1,6 @@
 ﻿using PiTop.Abstractions;
 using System;
+using System.Device.I2c;
 using System.Linq;
 using PiTop.Algorithms;
 using Pocket;
@@ -8,9 +9,9 @@ using static Pocket.Logger;
 
 namespace PiTop.MakerArchitecture.Expansion
 {
-    public class ServoMotor : IConnectedDevice
+    public class ServoMotor : PlateConnectedDevice
     {
-        private readonly SMBusDevice _controller;
+        private readonly I2cDevice _controller;
         private Angle _zeroPoint;
         private RotationalSpeed _defaultSpeed;
         public ServoMotorPort Port { get; }
@@ -37,7 +38,7 @@ namespace PiTop.MakerArchitecture.Expansion
         private byte RegisterSpeed => (byte)(0x56 + Port);
         private byte RegisterAngleAndSpeed => (byte)(0x5C + Port);
 
-        public ServoMotor(ServoMotorPort port, SMBusDevice controller)
+        public ServoMotor(ServoMotorPort port, I2cDevice controller)
         {
             _controller = controller;
             Port = port;
@@ -130,17 +131,16 @@ namespace PiTop.MakerArchitecture.Expansion
             }
         }
 
-        public void Dispose()
-        {
-            Stop();
-        }
+  
 
         private void Stop()
         {
             Speed = RotationalSpeed.Zero;
         }
 
-        public void Connect()
+
+        /// <inheritdoc />
+        protected override void OnConnection()
         {
             _controller.WriteWord(REGISTER_MIN_PULSE_WIDTH, MIN_PULSE_WIDTH_MICRO_S);
             _controller.WriteWord(REGISTER_MAX_PULSE_WIDTH, MAX_PULSE_WIDTH_MICRO_S);

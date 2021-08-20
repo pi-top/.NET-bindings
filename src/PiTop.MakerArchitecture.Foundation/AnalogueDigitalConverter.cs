@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Device.I2c;
-
 using PiTop.Abstractions;
 
 namespace PiTop.MakerArchitecture.Foundation
 {
-    internal class AnalogueDigitalConverter : IDisposable
+    internal class AnalogueDigitalConverter
     {
         private readonly I2cDevice _device;
         private readonly int _channel;
@@ -68,14 +66,7 @@ namespace PiTop.MakerArchitecture.Foundation
 
         private int ReadRegister(byte registerAddress, I2cDevice device)
         {
-            var word = new byte[2];
-            device.ReadAtRegisterAddress(registerAddress, word);
-            return BitConverter.IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(word) : BinaryPrimitives.ReadInt16BigEndian(word);
-        }
-
-        public void Dispose()
-        {
-            _device.Dispose();
+            return device.ReadWord(registerAddress);
         }
     }
 }
